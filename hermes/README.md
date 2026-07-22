@@ -392,51 +392,118 @@ cat ~/.hermes/USER.md 2>/dev/null
 string_helpers.py의 나머지 함수들도 모두 바꿔줘
 ```
 
-### 시나리오 C: Proactive 알림/평가 기능 확인
+### 시나리오 C: Proactive 알림 기능 확인
 
-#### 설정 확인
+> [!NOTE]
+> 이 시나리오의 목표는 **사용자가 명시적으로 요청하지 않아도**, Agent가 코드를 읽거나 작업하는 과정에서 자발적으로 문제점을 알려주는지를 확인하는 것입니다.
+
+#### 사전 설정 (nudge 주기를 낮게)
 ```bash
-hermes config set memory.nudge_interval 5    # 5턴마다 memory review
-hermes config set skills.nudge_interval 5    # 5턴마다 skill review
+hermes config set skills.nudge_interval 5    # 5 tool-iteration마다 skill review
 ```
 
-> 기본값보다 낮게 설정하면 빠르게 확인 가능합니다.
+> 기본값(~10)보다 낮게 설정하면 proactive review가 빠르게 트리거됩니다.
 
-#### 코드 품질 proactive 알림 확인
+#### Step 1: 코드 읽기만 요청 — 자발적 품질 피드백 관찰
 ```
 > utils.py를 읽어줘
 ```
-→ Agent가 자발적으로 "이 파일에는 네이밍 일관성이 없습니다" 같은 피드백을 주는지 확인
+→ **관찰**: Agent가 단순히 파일 내용을 보여주는 것에 그치지 않고, "이 파일의 함수명이 camelCase/PascalCase/snake_case로 혼재되어 있습니다" 같은 **자발적 코드 품질 피드백**을 주는지 확인
 
-#### Memory 자동 기록 확인
+#### Step 2: 다른 파일에서도 같은 패턴 확인
 ```
-> 나는 항상 Python에서 snake_case를 사용해
-> type hint도 꼭 넣어줘
-> docstring은 Google 스타일로 써줘
+> calculator.py도 읽어줘
+> data_processor.py도 읽어줘
 ```
-→ 이런 대화 후 `~/.hermes/MEMORY.md`나 `USER.md`에 기록되었는지 확인
+→ **관찰**: 여러 파일을 읽으면서 "프로젝트 전체에 네이밍 일관성이 부족합니다" 같은 **프로젝트 수준 피드백**으로 확장되는지 확인
 
-### 시나리오 D: Insights & 사용 분석
+#### Step 3: 코드 수정 중 추가 제안 관찰
+```
+> utils.py의 getUserName을 get_user_name으로 바꿔줘
+```
+→ **관찰**: 리네이밍 수행 후 "다른 함수들도 동일하게 snake_case로 바꾸는 것이 좋겠습니다" 같은 **연관 작업 제안**을 자발적으로 하는지 확인
+
+#### 관찰 포인트 정리
+- [ ] 파일 읽기만 요청했는데 코드 품질 문제를 스스로 지적하는가?
+- [ ] 여러 파일을 보면서 프로젝트 수준의 패턴 문제를 인식하는가?
+- [ ] 하나의 작업을 완료한 후 유사한 작업을 자발적으로 제안하는가?
+- [ ] nudge interval에 도달했을 때 background review가 트리거되는가?
+
+### 시나리오 D: Skill Self-Improvement (시나리오 C에서 이어서)
+
+> [!IMPORTANT]
+> 이 시나리오는 **시나리오 A 또는 B에서 생성된 skill이 이미 존재**하는 상태에서 진행합니다.
+> 시나리오 A에서 자동 생성되었거나, 시나리오 B에서 `/learn`으로 만든 리네이밍 skill이 `~/.hermes/skills/`에 있어야 합니다.
+
+#### 목표
+기존에 만들어진 skill을 **반복적으로 사용**하면서, Agent가 해당 skill의 SKILL.md 내용을 **자동으로 개선/보완**하는지 확인합니다.
+
+#### Step 1: 기존 skill 내용 확인 (기준선 기록)
+```
+/skills
+```
+→ 시나리오 A/B에서 생성된 리네이밍 skill 이름을 확인 (예: `rename-to-snake-case`)
 
 ```
-/insights --days 7
-/usage
+/rename-to-snake-case   (또는 생성된 skill 이름으로 실행)
 ```
-→ 사용 패턴 분석 리포트를 확인
+→ skill 내용을 확인하고, **현재 SKILL.md 내용을 기록**해 둡니다 (비교 기준선)
+
+```bash
+# 기준선 백업:
+cp ~/.hermes/skills/<skill-name>/SKILL.md ~/test-hermes/SKILL_baseline.md
+```
+
+#### Step 2: 리네이밍 skill을 호출하여 실제 작업 수행
+```
+/<skill-name> string_helpers.py의 모든 함수를 snake_case로 바꿔줘
+```
+→ skill을 사용해 실제 리팩터링 수행
+
+#### Step 3: 변형된 상황에서 다시 skill 사용
+```
+/<skill-name> data_processor.py의 모든 함수를 snake_case로 바꿔줘. 그리고 type hint도 추가해줘
+```
+→ 기존 skill 범위(네이밍만)를 넘어서는 **추가 요구**를 함께 줍니다.
+→ **관찰**: Agent가 "이 skill에 type hint 추가 절차도 포함시키겠습니다" 같은 반응을 보이며 skill을 patch하는지 확인
+
+#### Step 4: 한 번 더 확장된 요청으로 skill 사용
+```
+/<skill-name> file_utils.py의 모든 함수를 snake_case로 바꾸고, docstring도 Google 스타일로 추가해줘
+```
+→ 또 다른 추가 요구(docstring)와 함께 사용
+→ **관찰**: skill에 docstring 관련 절차가 추가 반영되는지 확인
+
+#### Step 5: Skill 내용 변화 확인
+```bash
+# SKILL.md 변경 여부 확인:
+diff ~/test-hermes/SKILL_baseline.md ~/.hermes/skills/<skill-name>/SKILL.md
+
+# 또는 Hermes 내에서:
+/skills
+```
+→ SKILL.md가 사용 경험을 반영하여 확장/개선되었는지 비교
+
+#### 관찰 포인트 정리
+- [ ] skill을 여러 번 사용한 후 SKILL.md 내용이 변경되었는가?
+- [ ] 기존 skill 범위 밖의 요청(type hint, docstring)이 skill에 반영되었는가?
+- [ ] `skill_manage(action='patch')` 또는 `action='edit'`가 자동으로 호출되었는가?
+- [ ] skill의 description이나 절차 단계가 더 상세해졌는가?
+- [ ] Agent가 "이 skill을 개선했습니다" 같은 알림을 주었는가?
 
 ---
 
 ## 7. 확인 체크리스트
 
-| # | 확인 항목 | 커맨드/방법 | 기대 결과 |
-|---|----------|------------|----------|
-| 1 | Skill 자동 생성 | `ls ~/.hermes/skills/` | 반복 작업 후 새 skill 디렉터리 생성됨 |
-| 2 | Memory 자동 기록 | `cat ~/.hermes/MEMORY.md` | 사용자 선호가 기록됨 |
-| 3 | `/learn` 동작 | `/learn <소스>` → `/skills` | 학습된 skill이 목록에 나타남 |
-| 4 | Skill Self-improve | 기존 skill 반복 사용 후 확인 | SKILL.md 내용이 개선/보완됨 |
-| 5 | Proactive 제안 | 코드 작업 중 관찰 | Agent가 자발적으로 개선 제안 |
-| 6 | 패턴 인식 → memory | 동일 스타일 반복 지시 | USER.md에 스타일 선호 기록 |
-| 7 | Nudge 주기 동작 | 설정 후 N턴 대화 | 일정 턴 후 review 발생 |
+| # | 확인 항목 | 시나리오 | 커맨드/방법 | 기대 결과 |
+|---|----------|---------|------------|----------|
+| 1 | Skill 자동 생성 | A | `ls ~/.hermes/skills/` | 반복 작업 후 새 skill 디렉터리 생성됨 |
+| 2 | `/learn` 동작 | B | `/learn <소스>` → `/skills` | 학습된 skill이 목록에 나타남 |
+| 3 | Proactive 코드 품질 알림 | C | 파일 읽기 요청 후 관찰 | Agent가 자발적으로 네이밍 문제 지적 |
+| 4 | 연관 작업 자발적 제안 | C | 단일 리네이밍 후 관찰 | "다른 함수도 바꾸겠습니까?" 제안 |
+| 5 | Skill Self-improve | D | `diff SKILL_baseline.md SKILL.md` | 반복 사용 후 SKILL.md 내용 확장/개선 |
+| 6 | Skill에 새 절차 추가 | D | skill 사용 + type hint 요청 | skill에 type hint 절차 반영 |
+| 7 | Nudge 주기 동작 | C, D | 설정 후 N턴 대화 | 일정 턴 후 review 발생 |
 
 ---
 
