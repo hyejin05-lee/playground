@@ -107,7 +107,9 @@ Agent가 대용량 로그를 무작정 읽거나 검색하기 전에 분석의 '
      - 장애가 발생한 정확한 시간대(Window)는 언제인가?
   4. **마커 및 이상 패턴 (Markers/Clues)**
      - 사용자가 이미 알고 있는 에러 코드, Exception 이름, Correlation ID, 특정 IP 주소 등이 있는가?
-  5. **로그 구조 이해 (Schema Parsing)**
+  5. **로그 도메인 및 유형 (Domain & Log Type)**
+     - 웹서버 Access Log(Nginx/Apache), 애플리케이션 Structured Log(JSON), 커널 Syslog, 분산 시스템 Trace 중 어느 것에 해당하는가? (도메인 특화 파싱 전략 적용)
+  6. **로그 구조 이해 (Schema Parsing)**
      - 로그의 첫 10줄을 읽어 타임스탬프 형식 및 구분자(JSON, CSV 등) 파악.
 
 * **필터링 (Triage):**
