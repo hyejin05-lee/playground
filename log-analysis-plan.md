@@ -51,6 +51,9 @@
 > 3. **알려진 이상 징후 마커 (Abnormal Markers) 파악**
 >    - 사용자가 이미 인지하고 있는 에러 코드(예: HTTP 500, Exception), 타임아웃, 특정 IP 등 검색 단서나 키워드가 존재하는가?
 
+<img width="421" height="385" alt="image" src="https://github.com/user-attachments/assets/b15d871c-5b81-4638-9b2f-86a4bd2b807d" />
+
+
 ```mermaid
 flowchart TD
     A[대용량 로그 파일] --> B[1단계: Context Discovery & Triage<br>(로그 인식 및 초기 맥락 파악)]
