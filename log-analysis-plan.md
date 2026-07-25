@@ -129,3 +129,9 @@ log_analysis_config:
   - 실시간 Log tailing, 에러 트래킹, 텍스트 패턴 서치 전문 MCP. 파일 파싱 로직을 서버 단에 오프로드하는 구조로 벤치마킹하기 좋습니다.
 * **[LogAnalyzer MCP](https://mcp-marketplace.io/server/io-github-fato07-log-analyzer-mcp)**
   - AI 기반 로그 분석에 특화되어 다수의 로그 포맷 파싱(Syslog, JSON, Docker 등) 및 스마트 에러 추출을 제공하는 MCP.
+
+### Skill
+
+* log-analyzer https://mcp.directory/skills/log-analyzer
+* log-analyzer https://mcpmarket.com/ko/tools/skills/log-analyzer-1
+* https://skillsmp.com/creators/a5c-ai/babysitter/library-specializations-devops-sre-platform-skills-log-analysis
