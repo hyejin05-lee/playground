@@ -133,7 +133,18 @@ log_analysis_config:
 ### Skill
 
 * [Log Analysis & Performance Monitoring](https://mcpmarket.com/ko/tools/skills/log-analysis-performance-monitoring-1)
+  - 애플리케이션 로그를 분석하여 성능 병목 현상, 반복적인 에러 패턴, 그리고 리소스 사용량 이상 징후를 식별합니다.
+  - workflow 요약
+  Step 1: 대상 식별 및 데이터 추출 (Data Collection)
+  "Identify log files... Extract relevant data..."
+    행동: 특정 시간대(Timeframe)와 애플리케이션에 해당하는 타겟 로그 파일을 특정하고, 그 안에서 분석에 필요한 핵심 데이터(타임스탬프, 처리 시간, 에러 메시지)만 정제하여 추출합니다.
+  
+  Step 2: 패턴 분석 및 이슈 그룹화 (Analysis & Aggregation)
+  "Apply pattern matching... Aggregate and group..."
+  행동: 추출한 데이터에 정규식이나 패턴 매칭을 적용하여 '지연된 요청(Slow requests)'과 '에러'를 찾아내고, 동일하거나 유사한 원인을 가진 이슈들을 하나로 묶어(Grouping) 통계적 유의미성을 확보합니다.
 
+  Step 3: 리포트 생성 및 최적화 제안 (Reporting & Optimization)
+  "Generate analysis report... Suggest optimization..."
 
 
 ## 대용량 로그 분석을 위한 LLM Agent 학계 최신 연구 동향 (2025~2026)
