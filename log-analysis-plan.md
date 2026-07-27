@@ -118,7 +118,7 @@ log_analysis_config:
 
 ---
 
-## 7. 참고 사항 (Reference: Popular Skills & MCP Servers)
+## 7. 참고 사항 (Reference: Popular Skills & MCP Servers, papers)
 
 로그 분석 에이전트 개발 시 기존 오픈소스 커뮤니티에서 검증된 도구/방식을 벤치마킹할 수 있습니다.
 
@@ -132,6 +132,6 @@ log_analysis_config:
 
 ### Skill
 
-* log-analyzer https://mcp.directory/skills/log-analyzer
-* log-analyzer https://mcpmarket.com/ko/tools/skills/log-analyzer-1
-* https://skillsmp.com/creators/a5c-ai/babysitter/library-specializations-devops-sre-platform-skills-log-analysis
+* [Log Analysis & Performance Monitoring](https://mcpmarket.com/ko/tools/skills/log-analysis-performance-monitoring-1)
+
+###    
