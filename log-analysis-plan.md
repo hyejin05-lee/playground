@@ -118,7 +118,7 @@ log_analysis_config:
 
 ---
 
-## 7. 참고 사항 (Reference: Popular Skills & MCP Servers, papers)
+## 7. 참고 사항 (Reference: Popular Skills & MCP Servers)
 
 로그 분석 에이전트 개발 시 기존 오픈소스 커뮤니티에서 검증된 도구/방식을 벤치마킹할 수 있습니다.
 
@@ -134,4 +134,36 @@ log_analysis_config:
 
 * [Log Analysis & Performance Monitoring](https://mcpmarket.com/ko/tools/skills/log-analysis-performance-monitoring-1)
 
-###    
+
+
+## 대용량 로그 분석을 위한 LLM Agent 학계 최신 연구 동향 (2025~2026)
+
+최근 학계에서는 Perspective의 접근법과 유사하게 단순 프롬프팅을 넘어 '도구 제어', 'RAG', '다중 에이전트(Multi-agent)'를 결합하여 대용량 로그를 분석하는 연구가 주를 이루고 있습니다. 아래는 참고할 만한 최신 핵심 논문들입니다.
+
+### 1. 체계적 고찰 및 동향 (Systematic Reviews)
+* **LLM4Log: A Systematic Review of Large Language Model-based Log Analysis**
+  * 로그 파싱, 이상 탐지, 근본 원인 분석에 이르는 파이프라인 전체를 분류하고, 대용량 처리를 위한 '에이전트 증강 패턴(RAG, Tool-use 등)'을 정리한 체계적 문헌 고찰입니다.
+  * (https://arxiv.org/search/cs?query=%22LLM4Log%3A+A+Systematic+Review+of+Large+Language+Model-based+Log+Analysis%22&searchtype=all&abstracts=show&order=-announced_date_first&size=50)
+  * 의의: 단순 파싱을 넘어 이상 탐지(Anomaly Detection), 근본 원인 분석(Root Cause Analysis), 로그 요약에 이르기까지 LLM 에이전트가 수행하는 파이프라인을 분류했습니다. 특히 대용량 로그 처리를 위해 에이전트에 RAG(검색 증강 생성)나 외부 툴(Tool-use)을 결합하는 '에이전트 증강 패턴'을 잘 설명하고 있습니다.
+* **LLM-based event log analysis techniques: A survey ([arXiv:2502.00677](https://arxiv.org/abs/2502.00677))**
+  * 이벤트 로그의 방대한 분량과 복잡성을 극복하기 위한 청킹(Chunking), 인컨텍스트 러닝(ICL), 파인튜닝 전략을 조사한 서베이 논문입니다.
+
+### 2. 에이전트 아키텍처 및 프레임워크 (Agent Frameworks)
+* **LLMLogAnalyzer: A Clustering-Based Log Analysis Chatbot using Large Language Models ([arXiv:2510.24031](https://arxiv.org/abs/2510.24031))**
+  * 라우터, 로그 파서, 검색 툴을 모듈화하여 LLM이 대용량 파일을 직접 읽는 대신 **검색 툴을 통해 필터링된 결과만 주입**받게 하여 컨텍스트 초과 문제를 해결한 프레임워크입니다.
+* **Leveraging Large Language Model for Intelligent Log Processing and Autonomous Debugging (LLM-ID)**
+  * 에러 로그를 바탕으로 장애 체인을 재구성하고, 동적 로그 구조화 및 시맨틱 추론을 통해 논리적인 복구 계획까지 수립하는 지능형 디버거 모델입니다.
+* **R-Log: Incentivizing Log Analysis Capability in LLMs via Reasoning-based Reinforcement Learning**
+  * 로그 분석 과정을 한 번에 묶지 않고 검증 가능한 여러 단계로 분해하여 접근하도록 '추론 우선(Reasoning-first)' 강화학습을 적용해 환각(Hallucination)을 줄인 연구입니다.
+
+### 3. 멀티 에이전트 접근법 (Multi-Agent Systems)
+* **End-to-End Automated Logging via Multi-Agent Framework ([arXiv:2511.18528](https://arxiv.org/abs/2511.18528))**
+  * 단일 에이전트 대신 **"로그 파싱 전문", "이상 탐지 전문", "원인 분석 전문" 에이전트로 역할을 분담**시켜 병목을 줄이고 대용량 로그 처리 효율을 극대화한 프레임워크(AutoLogger)를 제안합니다.
+  * 의의: "로그 파싱 전문 에이전트", "이상 탐지 전문 에이전트", "코드 레벨 원인 분석 에이전트" 등 역할을 분담시켜 병목을 줄이고 대용량 데이터 처리의 효율성을 높이는 전략을 제시합니다.
+ 
+💡 연구 동향 요약: "어떻게 대용량(Large-Scale)을 처리하는가?"
+최신 논문들에서 공통으로 지적하는 대용량 로그 분석 에이전트의 핵심 해결 과제는 다음과 같습니다.
+
+프롬프트 단일화 탈피 (Workflow 지향): 1.5GB 로그를 통째로 프롬프트에 넣을 수 없으므로, "파싱 → 필터링 → RAG 검색 → 요약" 이라는 다단계 파이프라인을 구축하는 방향으로 연구가 집중되고 있습니다.
+Tool-Use (도구 활용): 에이전트가 직접 파이썬 코드(샌드박스)를 작성해 통계를 내거나, 정규식 기반의 검색 도구를 호출하게 만들어 LLM의 연산 부담을 줄입니다. (우리가 앞서 논의한 Perspective나 MCP 서버 개념과 일맥상통합니다.)
+하이브리드 검색 (Hybrid Retrieval): RAG를 적용할 때 단순 키워드 매칭(BM25)과 시맨틱 검색(Vector DB)을 결합하여, 가장 연관성 높은 로그 조각(Snippet)만 에이전트에게 전달합니다.
