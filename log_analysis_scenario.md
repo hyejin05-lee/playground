@@ -484,3 +484,27 @@ Phase 5 - Report:
 > **Perspective의 가치가 드러나는 순간:**
 > - **Skill/Workflow**: 에이전트가 `grep -c "WARN" HDFS.log` 같은 명령으로 빠르게 건수만 세고 끝낼 수 있음. 또는 1.47GB 파일을 통째로 읽으려다 컨텍스트 초과
 > - **Perspective**: `execute_command` 차단 → grep 우회 불가. `search_files`로 패턴을 찾고, `read_files`로 컨텍스트를 확인하는 **체계적 분석만 가능**. `user_patterns.lifecycle_events`로 정상 흐름을 알고 있으므로 **누락 탐지**(replicate 없음)까지 수행
+
+---
+
+## References: 대용량 로그 분석을 위한 LLM Agent 학계 최신 연구 동향 (2025~2026)
+
+최근 학계에서는 Perspective의 접근법과 유사하게 단순 프롬프팅을 넘어 '도구 제어', 'RAG', '다중 에이전트(Multi-agent)'를 결합하여 대용량 로그를 분석하는 연구가 주를 이루고 있습니다. 아래는 참고할 만한 최신 핵심 논문들입니다.
+
+### 1. 체계적 고찰 및 동향 (Systematic Reviews)
+* **LLM4Log: A Systematic Review of Large Language Model-based Log Analysis**
+  * 로그 파싱, 이상 탐지, 근본 원인 분석에 이르는 파이프라인 전체를 분류하고, 대용량 처리를 위한 '에이전트 증강 패턴(RAG, Tool-use 등)'을 정리한 체계적 문헌 고찰입니다.
+* **LLM-based event log analysis techniques: A survey ([arXiv:2502.00677](https://arxiv.org/abs/2502.00677))**
+  * 이벤트 로그의 방대한 분량과 복잡성을 극복하기 위한 청킹(Chunking), 인컨텍스트 러닝(ICL), 파인튜닝 전략을 조사한 서베이 논문입니다.
+
+### 2. 에이전트 아키텍처 및 프레임워크 (Agent Frameworks)
+* **LLMLogAnalyzer: A Clustering-Based Log Analysis Chatbot using Large Language Models ([arXiv:2510.24031](https://arxiv.org/abs/2510.24031))**
+  * 라우터, 로그 파서, 검색 툴을 모듈화하여 LLM이 대용량 파일을 직접 읽는 대신 **검색 툴을 통해 필터링된 결과만 주입**받게 하여 컨텍스트 초과 문제를 해결한 프레임워크입니다.
+* **Leveraging Large Language Model for Intelligent Log Processing and Autonomous Debugging (LLM-ID)**
+  * 에러 로그를 바탕으로 장애 체인을 재구성하고, 동적 로그 구조화 및 시맨틱 추론을 통해 논리적인 복구 계획까지 수립하는 지능형 디버거 모델입니다.
+* **R-Log: Incentivizing Log Analysis Capability in LLMs via Reasoning-based Reinforcement Learning**
+  * 로그 분석 과정을 한 번에 묶지 않고 검증 가능한 여러 단계로 분해하여 접근하도록 '추론 우선(Reasoning-first)' 강화학습을 적용해 환각(Hallucination)을 줄인 연구입니다.
+
+### 3. 멀티 에이전트 접근법 (Multi-Agent Systems)
+* **End-to-End Automated Logging via Multi-Agent Framework ([arXiv:2511.18528](https://arxiv.org/abs/2511.18528))**
+  * 단일 에이전트 대신 **"로그 파싱 전문", "이상 탐지 전문", "원인 분석 전문" 에이전트로 역할을 분담**시켜 병목을 줄이고 대용량 로그 처리 효율을 극대화한 프레임워크(AutoLogger)를 제안합니다.
