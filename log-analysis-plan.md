@@ -38,8 +38,8 @@
 
 로그 분석은 단순한 '에러 추출'에 국한되지 않습니다. 성능 병목 식별, 비정상 패턴 탐지 등 다양한 사용 목적에 범용적으로 적용할 수 있는 **일반화된 멀티 에이전트 파이프라인**을 설계합니다.
 
-> **Context Discovery (초기 맥락 파악):**  
-> 분석을 시작하기 전, Agent는 다음 질문들에 대한 답을 사용자에게 묻거나 시스템을 통해 스스로 파악하여 분석 방향을 구체화해야 합니다.
+> **Context Discovery (초기 맥락 파악 및 목표 설정):**  
+> 분석을 시작하기 전, Agent는 다음 질문들에 대한 답을 사용자에게 묻거나 시스템을 통해 스스로 파악하여 분석 방향((Downstream Task)을 구체화해야 합니다.
 > 1. **로그 도메인 및 유형 (Domain & Log Type)**
 >    - 웹서버 Access Log(Nginx/Apache), 애플리케이션 Structured Log(JSON), 커널 Syslog, 분산 시스템 Trace 중 어느 것에 해당하는가? (도메인 특화 파싱 전략 적용)
 > 2. **분석 목적 (Goal)**
@@ -48,29 +48,41 @@
 >    - 이상 패턴(Anomaly) 탐지인가?
 >    - 성능 병목(Performance) 식별인가?
 >    - 보안 침해(Security) 조사인가?
-> 3. **알려진 이상 징후 마커 (Abnormal Markers) 파악**
->    - 사용자가 이미 인지하고 있는 에러 코드(예: HTTP 500, Exception), 타임아웃, 특정 IP 등 검색 단서나 키워드가 존재하는가?
+> 3. **알려진 이상 징후 마커 (known Markers) 파악**
+>    - 알려진 에러 코드(예: HTTP 500, Exception), 타임아웃, 특정 IP, Trace ID 등 검색 단서나 키워드가 존재하는가?
 
-<img width="421" height="385" alt="image" src="https://github.com/user-attachments/assets/b15d871c-5b81-4638-9b2f-86a4bd2b807d" />
+<img width="380" height="374" alt="image" src="https://github.com/user-attachments/assets/eb3a2c79-ed02-4cd8-9fc7-4d77ef92060f" />
 
 
 ```mermaid
 flowchart TD
-    A[대용량 로그 파일] --> B[1단계: Context Discovery & Triage<br>(로그 인식 및 초기 맥락 파악)]
-    B --> C[2단계: Pattern Filtering & Chunking<br>(목적별 타겟 데이터 추출 및 분할)]
-    C --> D[3단계: Deep Reasoning / Investigation<br>(상관관계 및 인과 심층 분석)]
-    D --> E[4단계: Synthesis & Reporting<br>(최종 리포트 및 가이드 제시)]
+    A[대용량 Raw 로그 파일] --> B[1단계: Log Parsing & Context Discovery<br>(로그 파싱 및 맥락 파악)]
+    B --> C[2단계: Log Representation & Chunking<br>(로그 정형화 및 세션/윈도우 분할)]
+    C --> D[3단계: Downstream Task - Deep Reasoning<br>(목적별 심층 분석 및 인과 추론)]
+    D --> E[4단계: Downstream Task - Synthesis & Reporting<br>(최종 리포트 및 가이드 제시)]
     
-    U[분석 목적 및 사용자 정의 Config] -.-> C
+    U[분석 목적 및 사용자 정의 Config] -.-> B
+    U -.-> C
     U -.-> D
 ```
 
-| 단계 | 역할 | 주요 동작 및 세부 전략 |
+| 단계 | 논문 매핑 개념 | 주요 동작 및 세부 전략 |
 | :--- | :--- | :--- |
-| **1단계: 로그 인식 및 파악** (Triage) | 초기 맥락 탐색 | • **로그 도메인 및 유형 파악**: Syslog, JSON, Nginx 여부 확인 및 타임스탬프 파싱<br>• 식별자(Trace ID, IP 등) 스캔 및 샘플링 분석 |
-| **2단계: 타겟 추출 및 분할** (Filtering) | 데이터 1차 감축 | • **데이터 처리 전략 적용**: 전체 분석 불가 시 청킹 및 필터링 수행<br>• **분석 목적**에 부합하는 키워드/정규식 기반으로 관련 데이터 추출 및 시간대/식별자 단위 분할 |
-| **3단계: 심층 원인 분석** (Investigation) | 상관관계 추론 | • 추출된 로그들의 전후 타임라인 Context 연관성 교차 분석<br>• 정상 패턴 vs 이상 패턴(Anomaly) 차이 식별 및 전파 경로 추적 |
-| **4단계: 종합 리포팅** (Synthesis) | 결과 및 힌트 생성 | • Root Cause(근본 원인) 진단 요약 및 논리적 타임라인 정리<br>• 엔지니어 대상 조치 권고안(Actionable Hints) 제공 |
+| **1단계: 로그 파싱 및 맥락 파악**<br>(Parsing & Triage) | **LLM-based Log Parsing** | • **Raw 로그 구조화**: 비정형 로그 라인에서 고정된 텍스트(Template)와 변수(Parameters)를 분리 및 파싱<br>• **도메인 인식**: Syslog, JSON, Nginx 여부 등 포맷 확인 및 타임스탬프 규격화<br>• **초기 맥락 스캔**: 주요 식별자 파악 및 사용자의 분석 목적(Goal) 확인 |
+| **2단계: 로그 정형화 및 분할**<br>(Representation & Filtering) | **Log Representation** | • **로그 윈도우/세션 구성**: 파싱된 개별 로그 이벤트를 시간대(Time Window), 식별자(Session, Trace ID) 등 의미 있는 단위로 그룹화(Chunking)<br>• **데이터 타겟팅**: 분석 목적에 부합하는 파라미터/키워드를 기준으로 데이터를 1차 필터링 및 감축<br>• **Feature 변환**: 후속 심층 분석이 용이하도록 이벤트 시퀀스를 정형화된 컨텍스트로 구성 |
+| **3단계: 심층 원인 분석**<br>(Deep Investigation) | **Downstream Tasks**<br>*(RCA, Anomaly Detection, Log Summarization 등)* | • **상관관계 및 인과 추론**: 윈도우/세션 단위로 묶인 로그 컨텍스트 간의 전후 타임라인 연관성을 교차 분석<br>• **이상 탐지**: 정상 패턴(Normal)과 이상 패턴(Anomaly)의 차이를 식별하고 에러의 전파 경로 추적<br>• **장애 진단(RCA)**: 표면적인 증상(Symptom)을 넘어선 근본 원인(Root Cause) 탐색 |
+| **4단계: 종합 리포팅**<br>(Synthesis) |  | • Root Cause(근본 원인) 진단 요약 및 논리적 타임라인 정리<br>• 엔지니어 대상 조치 권고안(Actionable Hints) 제공 |
+
+
+참고)
+논문 그림에서 `LLM-assisted Logging` 단계는 맵핑되는게 없는거지?
+=> 네, 현재 우리가 정의한 4단계 '분석(Analysis)' 파이프라인에는 포함되지 않는 것이 맞습니다.
+
+그 이유는 발생 시점이 다르기 때문입니다.
+
+LLM-assisted Logging (논문의 첫 단계): 개발자가 코드를 짤 때 "어떤 내용을, 어떤 포맷으로 로그로 남길지" LLM이 도와주는 개발/유지보수 단계입니다. (예: "여기서 예외 처리할 때 변수 값도 같이 로그로 남기는 게 좋아"라고 추천해 주는 것)
+우리의 4단계 파이프라인: 이미 시스템이 운영되면서 '수집된 방대한 로그 데이터'를 사후에 분석하는 단계에 집중하고 있습니다.
+
 
 ---
 
@@ -156,6 +168,8 @@ log_analysis_config:
   * 로그 파싱, 이상 탐지, 근본 원인 분석에 이르는 파이프라인 전체를 분류하고, 대용량 처리를 위한 '에이전트 증강 패턴(RAG, Tool-use 등)'을 정리한 체계적 문헌 고찰입니다.
   * (https://arxiv.org/search/cs?query=%22LLM4Log%3A+A+Systematic+Review+of+Large+Language+Model-based+Log+Analysis%22&searchtype=all&abstracts=show&order=-announced_date_first&size=50)
   * 의의: 단순 파싱을 넘어 이상 탐지(Anomaly Detection), 근본 원인 분석(Root Cause Analysis), 로그 요약에 이르기까지 LLM 에이전트가 수행하는 파이프라인을 분류했습니다. 특히 대용량 로그 처리를 위해 에이전트에 RAG(검색 증강 생성)나 외부 툴(Tool-use)을 결합하는 '에이전트 증강 패턴'을 잘 설명하고 있습니다.
+  * <img width="737" height="275" alt="image" src="https://github.com/user-attachments/assets/c7e27aab-a84f-4aa9-9eee-fd430522da65" />
+
 * **LLM-based event log analysis techniques: A survey ([arXiv:2502.00677](https://arxiv.org/abs/2502.00677))**
   * 이벤트 로그의 방대한 분량과 복잡성을 극복하기 위한 청킹(Chunking), 인컨텍스트 러닝(ICL), 파인튜닝 전략을 조사한 서베이 논문입니다.
 
