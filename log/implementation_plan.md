@@ -1,4 +1,4 @@
-# XX전자 사내 Cline 기반 대용량 Log 분석 Agent 설계 (v5)
+# XX전자 사내 Cline 기반 대용량 Log 분석 Agent 설계
 
 ## 1. 개요
 
@@ -85,7 +85,7 @@
 | **Artifact** | PatternCompressor + StatisticalPrefilter |
 | **Environment** | 사내 Token Budget 월 단위로 설정된 상태 |
 | **Response** | ① 통계적 사전 필터링으로 정상 heartbeat/센서 데이터 로그를 LLM에 전송하지 않음 ② "Sensor OK" 같은 반복 상태 메시지를 압축하여 토큰 소비 절감 ③ 기준량 내에서 분석 완료 또는 초과 예상 시 사용자에게 경고 알림 ④ 분석 완료 후 실제 토큰 사용량 리포트 제공 |
-| **Measure** | ① 전체 로그 대비 LLM에 실제 전송되는 텍스트 비율 ≤ 5% ② 동일 분석 결과 대비 Naive 방식(전체 전송) 대비 Token 사용량 ≤ 20% ③ 불필요한 Token 낭비율 0% (기준량 도달 시 경고 알림 + 부분 결과 반환) ④ 중복 패턴 압축률 ≥ 70% (동일 heartbeat 메시지 N회 반복 → 1회 + 빈도 메타데이터) |
+| **Measure** | ① 전체 로그 대비 LLM에 실제 전송되는 텍스트 비율 ≤ 5% ② 동일 분석 결과 대비 Naive 방식(전체 전송) 대비 Token 사용량 ≤ 50% ③ 불필요한 Token 낭비율 0% (기준량 도달 시 경고 알림 + 부분 결과 반환) ④ 중복 패턴 압축률 ≥ 70% (동일 heartbeat 메시지 N회 반복 → 1회 + 빈도 메타데이터) |
 
 ---
 
@@ -102,6 +102,59 @@
 
 ---
 
+### 대체 시나리오: Loghub HDFS_v1 오픈소스 데이터셋 기반
+
+> [!NOTE]
+> 사내 제품군 로그 확보가 어려운 경우, 아래 오픈소스 데이터셋 기반 대체 시나리오로 각 QA의 정량적 검증이 가능하다.
+> **데이터셋**: [Loghub HDFS_v1](https://github.com/logpai/loghub) — `HDFS.log` (1.47 GB, 11,175,629 라인) + `anomaly_label.csv` (575,061 블록, Anomaly 16,838건/2.9%)
+
+#### QA-1 대체: 기능 정확성 — HDFS Anomaly 블록 탐지 정확도
+
+| 항목 | 내용 |
+|------|------|
+| **Source** | 검증 담당 엔지니어 |
+| **Stimulus** | 1.47GB HDFS.log에 대해 "이상치 현황 분석해줘" 요청 |
+| **Artifact** | Log Analysis Engine (LLM 추론 모듈 + 도구 체인) |
+| **Environment** | Loghub HDFS_v1 데이터셋 + `anomaly_label.csv` Ground Truth |
+| **Response** | Agent가 블록 라이프사이클(`allocate → receive → replicate → serve → delete`)에서 누락/오류 패턴을 식별하여 Anomaly 블록 목록을 도출 |
+| **Measure** | `anomaly_label.csv` Ground Truth 대비: ① **Recall ≥ 80%** (16,838 Anomaly 블록 중 탐지 비율) ② **Precision ≥ 70%** (Agent가 Anomaly로 지목한 블록 중 실제 Anomaly 비율) ③ 인용된 로그 라인 참조 정확도 100% |
+
+> **검증 방법**: Agent가 출력한 Anomaly 블록 ID 목록과 `anomaly_label.csv`의 `Label=Anomaly` 목록을 대조하여 Recall/Precision/F1 자동 산출.
+
+#### QA-2 대체: 기능 적응성 — HDFS 도메인 지식 적응 + 분석 목적 전환
+
+| 항목 | 내용 |
+|------|------|
+| **Source** | 검증 담당 엔지니어 (Cold Start 상태) |
+| **Stimulus** | (a) Agent가 처음 보는 HDFS 로그 포맷에서, 엔지니어가 "`blk_` 접두사가 블록 ID이고, 정상 흐름은 `allocateBlock → Receiving → Received → addStoredBlock → ask to replicate → Transmitted → Served → delete → Deleting`이다"라는 도메인 지식을 제공 (b) 이후 "에러 분석" 대신 "복제 실패 패턴을 가진 블록들의 성능 병목(복제 지연 시간) 분석해줘"로 분석 목적을 전환 |
+| **Artifact** | Domain Adaptation Module (FormatAdapter + DomainMemory + Dynamic Strategy Selector) |
+| **Environment** | 사전 학습 없는 Cold Start → 도메인 지식 주입 후 |
+| **Response** | ① HDFS 로그 포맷(`081109 hhmmss msec INFO ...`)을 자동 감지 ② 사용자가 가르친 블록 라이프사이클을 메모리에 저장하여 이후 분석에 반영 ③ 목적 전환 시 에러 탐지가 아닌 타임스탬프 델타 기반 복제 지연 분석으로 전략 자동 전환 |
+| **Measure** | ① 포맷 감지 2회 이내 대화로 완료 ② 저장된 라이프사이클 규칙의 이후 분석 반영률 100% ③ 목적 전환 시 추가 프롬프팅 없이 1회 질의로 전략 변경 |
+
+#### QA-3 대체: 수행 효율성 — 1.47GB HDFS 로그 Token 절감
+
+| 항목 | 내용 |
+|------|------|
+| **Source** | 시스템 자체 (Token 사용량 모니터링) |
+| **Stimulus** | 1.47GB HDFS.log (11.1M 라인)에 대해 "Anomaly 블록 식별 및 근본 원인 분석" 요청 |
+| **Artifact** | PatternCompressor + StatisticalPrefilter |
+| **Environment** | 사내 Token Budget 월 단위로 설정된 상태 |
+| **Response** | ① 정상 블록의 반복 `Served block` 로그(전체의 ~70%)를 압축/스킵 ② `WARN`/`ERROR` 밀도가 높은 시간대 청크를 우선 분석 ③ 동일 패턴의 정상 라이프사이클 로그를 "원본 1개 + 반복 N회" 메타데이터로 치환 |
+| **Measure** | ① 전체 11.1M 라인 대비 LLM에 실제 전송되는 텍스트 비율 ≤ 5% ② Naive 방식(전체 전송) 대비 Token 사용량 ≤ 50% ③ 압축 후에도 QA-1 대체 시나리오의 Recall 저하 ≤ 5%p |
+
+#### QA-4 대체: 설명 용이성 — HDFS Anomaly 근본 원인 추론 체인
+
+| 항목 | 내용 |
+|------|------|
+| **Source** | 검증 담당 엔지니어 |
+| **Stimulus** | 엔지니어가 "Anomaly 블록 `blk_-3544583377289625738`의 원인 분석해줘" 요청 |
+| **Artifact** | Reasoning Trace Module + Evidence Linker |
+| **Environment** | 분석 완료 후 결과 제시 단계 |
+| **Response** | ① 해당 블록의 라이프사이클에서 `ask to replicate` 단계 누락을 식별 ② 추론 체인(`복제 단계 누락 → 3개 노드만 보유 → replication factor 미달 → 삭제 시 volumeMap 불일치 → BlockInfo not found WARN`)을 단계별로 설명 ③ 각 단계의 확신도 표시 ④ 원본 로그 라인 참조 딥링크 ⑤ **추가 요청 없이도** 자동 마크다운 리포트 생성 |
+| **Measure** | ① 모든 결론에 최소 1개 이상의 원본 로그 증거(라인 번호) 첨부 ② 추론 체인의 각 단계가 자연어로 설명됨 ③ 정상 블록(예: `blk_-1608999687919862906`)과의 비교 분석이 포함됨 ④ 원본 라인 참조의 유효율 100% |
+
+---
 
 
 ## 3. QA 시나리오별 Architecture Approach
@@ -229,7 +282,7 @@
 | QA-2b | 파일 쓰기 및 권한 통제 | 일반 로그 파일/시스템 폴더에 대한 Write/Delete 시도를 가로채기 | 차단율 100% |
 | QA-2b | 위험 시스템 명령 차단 | exec/spawn 등 시스템 명령 실행 시도 가로채기 | 차단율 100% |
 | QA-2b | Harness 환경 동등성 | 무인(Harness) 모드에서도 Allowlist 외의 도구 사용 완벽 통제 확인 | 차이 0건 |
-| QA-3 | 자원 효율 (Token 절감) | 중복 메시지 압축/스킵(Known-marker) 알고리즘 적용 전후 토큰 소모량 비교 | Naive 대비 Token 소모량 ≤ 20% |
+| QA-3 | 자원 효율 (Token 절감) | 중복 메시지 압축/스킵(Known-marker) 알고리즘 적용 전후 토큰 소모량 비교 | Naive 대비 Token 소모량 ≤ 50% |
 | QA-4 | 증거 첨부 완전성 | 모든 분석 결과에 원본 로그에 실존하는 증거 첨부 비율 확인 | 100% 달성 |
 
 ---
