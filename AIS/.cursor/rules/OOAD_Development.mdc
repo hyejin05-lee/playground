@@ -1,0 +1,46 @@
+---
+description: OOAD Process Rules
+globs: *
+---
+- 모든 구현은 C++ 코드로 작성한다.
+- Traceability Matrix는 그래프 형태로 시각화할 수 있어야 한다.
+- 개발할 시스템의 내부와 외부는 모든 다이어그램에서 일치해야 한다.
+- 객체지향 개발 SOLID 원칙을 적용한다.
+- 산출물 간에 일관성이 유지되어야 한다.
+- mermaid 를 사용하여 다이어그램을 그린다.
+
+## Evaluation Item
+해당 단계에서의 산출물 작성 시 체크리스트 활용하여 작성하고, 작성 후에는 체크리스트 항목에 대해 만족 여부를 확인한다.
+
+### Planning (System Features)
+-System Context가 정확하게 파악되었는가?
+-System Features가 모든 Stakeholder의 모든 Business Goals를 충분히 빠짐없이 반영하는가?
+
+### OOA (Domain Model)
+-Stakeholder가 Domain Model을 봤을 때, 시스템의 전체 구성과 기본적인 구조를 쉽게 파악할수있는가?
+-Domain Model이 ASR이 될 수 있는 기능 요구사항을 모두 고려하고있는가?
+
+### OOA (Use Case Model/System Sequence Diagram)
+- 대표적인 기능 요구사항과 아키텍처에 영향을 주는 ASR이 모두 빠짐없이 도출되었는가?
+- 모든 Actor가 도출되고, 역할이 정확하게 파악되었는가?
+- Use Case의 이름이 명확하고 그 내용과 일치하는가?
+- Use Case Diagram이 UML 문법에 맞게 정확하게 작성되었는가?
+- Use Case의 Main / Alternative Scenarios가 해당 System Feature를 빠짐없이 정확하게 반영하고 있는가?
+- System Sequence Diagram가 Use Case를 정확하게 반영하는가?
+- System Context의 External Interface와 일치하거나 Operation으로 상세화되었는가?
+
+### OOA (Quality Attribute Scenario)
+- QAS가 정확하게 정의되었는가?
+- QAS가 해당 QA의 달성 여부를 측정할 수 있게 정의되었는가?
+- QAS를 통해 시스템의 Candidate Design Approach들을 유추할 수 있는가?
+
+### OOD (Sequence Diagram)
+- 모든 ASR Use Cases의 기능 및 관련 QA 내용이 Sequence Diagram에 온전하고 충실하게 표현되었는가?
+- UC의 System Sequence Diagram과 Sequence Diagram이 유기적으로 연동되는가?
+
+### OOD (Class Diagram)
+- Class Diagram 내용과 구성이 Domain Model 및 Design Decision 과일치(Aligned)하는가?
+- 시스템의 Static Structure가 명확하고 이해하기 쉽게 모델링되었는가?
+
+### OOD (Traceability Matrix)
+- Stakeholder Business Goals → System Features → Use Cases (+SSD) / QAS 간의 추적성(Traceability)이 양방향으로 확보되었는가?
