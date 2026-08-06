@@ -43,4 +43,6 @@ globs: *
 - 시스템의 Static Structure가 명확하고 이해하기 쉽게 모델링되었는가?
 
 ### OOD (Traceability Matrix)
-- Stakeholder Business Goals → System Features → Use Cases (+SSD) / QAS 간의 추적성(Traceability)이 양방향으로 확보되었는가?
+- Stakeholder Business Goals → System Features → Use Cases (+SSD) / QAS 간의 추적성(Traceability)이 확보되었는가?
+- BG - SF - UC / QAS - Design Decision (Top Elements) 간의 전체 추적성을 한 눈에 파악할 수 있는가?
+- 각 Design Decision이 누구의 어떤 QA를 만족하기 위해 어떤 기법을 어디에 어떻게 적용했는지 확인이 가능한가?
