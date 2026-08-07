@@ -1,7 +1,8 @@
-# Design Model Command
-- Domain Model과 요구사항을 바탕으로 기술적 설계를 진행한다.
-- 클래스 다이어그램과 시퀀스 다이어그램을 작성한다.
-- Sequence Diagram은 Use Case 별로 작성한다.
-- Sequence Diagram(SD)은 System Sequence Diagram의 확장으로 I/O가 일치한다. 
-- Traceability Matrix를 그래프로 볼 수 있게 작성한다.
-- 산출물: `docs/Sequence Diagrams`, `docs/Class Diagram`, `docs/Traceability-Matrix.md`
+##산출물: `docs/3_OOD/ClaSequence_Diagrams.md`, `docs/3_OOD/Class_diagram.md`, `docs/3_OOD/Traceabiility_Matrix.md`
+##분석항목
+- Use Case별 Sequence Diagram(SD)을 작성한다.
+- Claass Diagram을 작성한다.
+- Traceability Matrix는 그래프 형태로 시각화할 수 있어야 한다.
+#체크리스트
+- SD는 SSD의 확장이다. I/O가 정확하게 일치한다.
+- Stakeholder Business Goals → Use Cases (+SSD) / QAS  → Design Decision (Top Elements) 간의 추적성 확인이 가능하다.
