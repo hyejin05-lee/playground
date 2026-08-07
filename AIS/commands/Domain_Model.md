@@ -1,5 +1,7 @@
-# Domain Model Command
-- 문제 영역의 개념을 도출하여 Domain Model을 작성한다.
-- Domain Model Diagram을 작성한다.
-- Domain Model과 UCD에서 시스템의 내부와 외부 내용이 반드시 일치해야 한다.
-- 산출물: `docs/Domain_Model.md`
+##산출물: `docs/2_OOA/Domain_Model.md`
+##분석항목
+- Domain model diagram을 작성한다.
+- 내부 후보들은 Use-case 내용을 분석해서 도출한다.
+- 외부 후보들은 System Context Diagram 과 Use case diagram 내용을 분석해서 도출한다.
+##체크리스트
+- Domain Model 과 UCD의 내용이 일치한다. 두 그림에서 개발할 시스템의 내부와 외부가 일치한다.
