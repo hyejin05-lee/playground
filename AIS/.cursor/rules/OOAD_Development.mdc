@@ -1,48 +1,17 @@
 ---
-description: OOAD Process Rules
-globs: *
+alwaysApply: true
 ---
-- 모든 구현은 C++ 코드로 작성한다.
-- Traceability Matrix는 그래프 형태로 시각화할 수 있어야 한다.
-- 개발할 시스템의 내부와 외부는 모든 다이어그램에서 일치해야 한다.
-- 객체지향 개발 SOLID 원칙을 적용한다.
-- 산출물 간에 일관성이 유지되어야 한다.
+
+- C++로 개발한다.
+- Agent 대화는 한글로 한다.
+- 객체지향 설계에는 SOLID principles를 적용한다.
+- 테스트 프레임워크는 gtest를 사용한다.
+- instruct, 체크리스트 확인 내용, 변경사항 반영 내역을 출력의 본문에 작성하지 
+않는다.
 - mermaid 를 사용하여 다이어그램을 그린다.
+    - 노드 ID와 대괄호 사이 공백 금지 (`NodeID["Label"]`)
+    - 라벨 내 줄바꿈 이스케이프 문자(`\n`) 사용 금지 (필요 시 `<br/>` 사용)
+    - `graph TD` 플로우차트에서는 `classDiagram` 전용 관계선(`..> Node : Label`) 사용 금지, 플로우차트 화살표 연동 표기법(`-.->|"Label"|`) 사용
+    - Sequence Diagram 내 외부 Actor는 `System Boundary Box` 외부에 배치하고, 내부 시스템 파티시펀트만 `box "System Boundary: ..."`로 캡슐화
+- 상위 산출물(서브시스템 및 컴포넌트 명칭 1:1 일치 등) 일치시켜 하향식 구조적 추적성을 유지한다.
 
-## Evaluation Item
-해당 단계에서의 산출물 작성 시 체크리스트 활용하여 작성하고, 작성 후에는 체크리스트 항목에 대해 만족 여부를 확인한다.
-
-### Planning (System Features)
--System Context가 정확하게 파악되었는가?
--System Features가 모든 Stakeholder의 모든 Business Goals를 충분히 빠짐없이 반영하는가?
-
-### OOA (Domain Model)
--Stakeholder가 Domain Model을 봤을 때, 시스템의 전체 구성과 기본적인 구조를 쉽게 파악할수있는가?
--Domain Model이 ASR이 될 수 있는 기능 요구사항을 모두 고려하고있는가?
-
-### OOA (Use Case Model/System Sequence Diagram)
-- 대표적인 기능 요구사항과 아키텍처에 영향을 주는 ASR이 모두 빠짐없이 도출되었는가?
-- 모든 Actor가 도출되고, 역할이 정확하게 파악되었는가?
-- Use Case의 이름이 명확하고 그 내용과 일치하는가?
-- Use Case Diagram이 UML 문법에 맞게 정확하게 작성되었는가?
-- Use Case의 Main / Alternative Scenarios가 해당 System Feature를 빠짐없이 정확하게 반영하고 있는가?
-- System Sequence Diagram가 Use Case를 정확하게 반영하는가?
-- System Context의 External Interface와 일치하거나 Operation으로 상세화되었는가?
-
-### OOA (Quality Attribute Scenario)
-- QAS가 정확하게 정의되었는가?
-- QAS가 해당 QA의 달성 여부를 측정할 수 있게 정의되었는가?
-- QAS를 통해 시스템의 Candidate Design Approach들을 유추할 수 있는가?
-
-### OOD (Sequence Diagram)
-- 모든 ASR Use Cases의 기능 및 관련 QA 내용이 Sequence Diagram에 온전하고 충실하게 표현되었는가?
-- UC의 System Sequence Diagram과 Sequence Diagram이 유기적으로 연동되는가?
-
-### OOD (Class Diagram)
-- Class Diagram 내용과 구성이 Domain Model 및 Design Decision 과일치(Aligned)하는가?
-- 시스템의 Static Structure가 명확하고 이해하기 쉽게 모델링되었는가?
-
-### OOD (Traceability Matrix)
-- Stakeholder Business Goals → (System Features) → Use Cases (+SSD) / QAS  → Design Decision (Top Elements) 간의 추적성(Traceability)이 확보되었는가?
-- BG - (SF) - UC / QAS - Design Decision (Top Elements) 간의 전체 추적성을 한 눈에 파악할 수 있는가?
-- 각 Design Decision이 누구의 어떤 QA를 만족하기 위해 어떤 기법을 어디에 어떻게 적용했는지 확인이 가능한가?

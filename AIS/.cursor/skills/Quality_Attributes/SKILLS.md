@@ -1,0 +1,60 @@
+---
+name: Quality_Attributes
+description: 전통적인 소프트웨어 제품 품질 모델의 9가지 주 품질속성 및 세부 품질속성을 정의한다.
+---
+
+1. Functional Suitability (기능 적합성)
+   - Functional Completeness (기능 완전성)
+   - Functional Correctness (기능 정확성)
+   - Functional Appropriateness (기능 적절성)
+
+2. Performance Efficiency (수행 효율성)
+   - Time Behaviour (시간 응답성)
+   - Resource Utilization (자원 활용성)
+   - Capacity (수용 용량)
+
+3. Compatibility (호환성)
+   - Co-existence (공존성)
+   - Interoperability (상호 운용성)
+
+4. Interaction Capability (상호작용 능력 / 사용성)
+   - Appropriateness Recognizability (적절성 인지성)
+   - Learnability (학습 용이성)
+   - Operability (운용 용이성)
+   - User Error Protection (사용자 오류 보호)
+   - User Interface Aesthetics (사용자 인터페이스 미학)
+   - Accessibility (접근성)
+
+5. Reliability (신뢰성)
+   - Maturity (성숙성)
+   - Availability (가용성)
+   - Fault Tolerance (결함 허용성)
+   - Recoverability (회복성)
+
+6. Security (보안성)
+   - Confidentiality (기밀성)
+   - Integrity (무결성)
+   - Non-repudiation (부인 방지성)
+   - Accountability (책임성)
+   - Authenticity (진정성 / 인증성)
+   - Resistance (저항성)
+
+7. Maintainability (유지보수성 / 변경 용이성)
+   - Modularity (모듈성)
+   - Reusability (재사용성)
+   - Analysability (분석 용이성)
+   - Modifiability (수정/변경 용이성)
+   - Testability (시험 용이성)
+
+8. Flexibility (유연성 / 이식성)
+   - Adaptability (적응성)
+   - Scalability (확장성)
+   - Installability (설치 용이성)
+   - Replaceability (대체 용이성)
+
+9. Safety (안전성)
+   - Operational Safety (운영 안전성)
+   - Reliability Safety (신뢰 안전성)
+   - Environmental Safety (환경 안전성)
+
+구체적인 정의는 ISO/IEC 25010:2023을 내용을 참고한다.
