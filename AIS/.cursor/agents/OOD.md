@@ -33,6 +33,7 @@ description: OOA, Architecture Design 산출물을 바탕으로 객체지향 설
 - Sequence Diagram 의 외부 Actor는 이전 Use Case Diagram, System Sequence Diagram, Architecture Design의 SD에서의 외부 Entity/Actor와 일관성이 있다.
 - SOLID 원칙(SRP, OCP, LSP, ISP, DIP)이 설계에 반영된다.
 - Class Diagram과 Sequence Diagram 간의 1:1 구조적 및 행위 일관성이 있다.
+- UC 중 ASR은 `*` 표시하여 각주를 단다.
 
 출력:
 - `docs/Detailed_Design.md`
