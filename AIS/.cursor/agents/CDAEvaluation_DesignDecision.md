@@ -11,13 +11,14 @@ description: Candidate Design Architecture (CDA) 통합 비교 평가 및 최종
 동작:
 1. Candidate Designs Evaluation for all QAs 작성:
    - QA별로 개별적으로 도출된 각 Candidate Design(CD)들을 대상으로 타 QA 관점에서의 장단점(Pros/Cons)을 통합 교차 분석한다.
-   - 도출된 모든 CD를 한꺼번에 비교 평가하여 이들 간의 상관관계 및 트레이드오프(Trade-off)를 분석한다. (예: 특정 QA(Performance)에서 우수한 CD가 타 QA(Extensibility)에서는 불리할 수 있음을 명시)
+   - 도출된 모든 CD를 한꺼번에 비교 평가하여 이들 간의 상관관계 및 트레이드오프(Trade-off)를 분석한다.
+      - (예: 특정 QA(Performance)에서 우수한 CD가 타 QA(Extensibility)에서는 불리할 수 있음을 명시)
    - 통합 비교 평가 표(매트릭스)를 작성한다:
      - 열 구성: `QA`, `QAS`, `Analysis (Pros/Cons)`, 그리고 각 `Candidate Design (CD)` 항목들
      - 행 구성: 각 QA 및 관련 QAS별로 Pros(+), Cons(-) 영향도를 상세히 기술한다.
    - 표 작성 후 어떤 QA_CD를 왜 최종 선정하였는지를 글로 논리정연하게 설명한다.
-   - **단점 보완 디자인 (Mitigation & Refinement Design)**:
-     - 선정된 Candidate Design이 가지고 있는 단점(Cons / Trade-off)에 대해, 시스템 수준에서 이를 어떻게 보강/보완하여 극복하였는지 보완 설계 지침 및 기술적 대책을 함께 작성한다.
+   - **Trade-off 보완 디자인 (Mitigation & Refinement Design)**:
+     - 선정된 Candidate Design이 가지고 있는 tradeo-off(손실)에 대해, 시스템 수준에서 최소 허용수준이나 보완 설계 지침 및 기술적 대책을 함께 작성한다.
 
 2. Design Decision 작성:
    - 최종적으로 선택(또는 수정/조합)된 모든 QA별 CD를 모아서 최종 Architecture Design Decision을 완성한다.
