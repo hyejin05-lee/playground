@@ -1,13 +1,13 @@
 ---
 name: Design_Concept
-description: 아키텍처 디자인 후보(Candidate Design) 도출 시 활용하는 5가지 Design Concepts을 (Reference Architecture, Deployment Pattern, Architecture Style, Tactics, Externally Developed Components)를 참조하여 설계에 가이드 한다.
+description: 소프트웨어 아키텍처 설계, 특히 CDA(Candidate Design Architecture)를 도출하거나 디자인 패턴(AI 시스템 패턴 등)을 적용해야 할 때 이 스킬을 사용하세요.
 ---
 
 # Design Concepts
-
+`
 Design concepts는 아키텍처 구조를 생성하고 candidate design(후보)을 도출하기 위한 핵심 구성 요소(Building Blocks)이다.
 
-## 5가지 Design Concepts 요소
+## Design Concepts 요소
 
 ### 1. Reference Architecture (참조 아키텍처)
 - **개념**: 특정 애플리케이션 유형에 대한 논리적 청사진(Logical Structure).
@@ -31,6 +31,10 @@ Design concepts는 아키텍처 구조를 생성하고 candidate design(후보)�
   - Application Framework: Spring, Hibernate, REST API, Swing 등
   - Platform: Java, .NET, Google Cloud, AWS 등
   - COTS (Commercial Off-The-Shelf) 및 기존 서드파티 라이브러리
+
+### 6. AI System Design Patterns
+- **개념**: AI 시스템(AI Agent 등)을 설계할 때 요구되는 특수한 품질 속성(Quality Attributes)과 아키텍처 패턴을 고려한 설계 기법.
+- **예시**: AI Agent Architecture, AI Design Patterns (Correctness, Robustness, Privacy, Fairness, Efficiency, Explainability, Adaptability, Controllability 적용 패턴)
 
 ---
 
