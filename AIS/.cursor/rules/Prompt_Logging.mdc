@@ -12,8 +12,8 @@ description: 프롬프트 실행 시 logs/prompt_log.md 기록 규칙
 
 ```markdown
 ### N. [작업 제목]
-- **Prompt**: 사용자가 입력한 프롬프트 요약
+- **Prompt**: 사용자가 입력한 프롬프트 한줄 요약
 - **Applied Rules & Skills**: 적용된 규칙 및 스킬 목록
-- **Response Summary**: LLM 응답의 핵심 내용 요약 (주요 판단 근거, 설계 결정, 핵심 산출물 포함)
+- **Response Summary**: LLM 응답의 핵심 내용 한줄 요약 
 ```
 
