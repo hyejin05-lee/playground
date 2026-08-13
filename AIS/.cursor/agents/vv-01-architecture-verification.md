@@ -8,8 +8,6 @@ description: ATAM 및 단계별 산출물 정합성/일관성 검증을 통한 �
 
 입력:
 - `docs/OOA-01-Architectural-Drivers.md`
-- `docs/OOA-02-Domain-Model.md`
-- `docs/AD-01-Candidate-Design-Architecture.md`
 - `docs/AD-02-CDA-Evaluation-Design-Decision.md`
 - `docs/AD-03-Architecture-Design.md`
 - `docs/OOD-01-Detailed-Design.md`
