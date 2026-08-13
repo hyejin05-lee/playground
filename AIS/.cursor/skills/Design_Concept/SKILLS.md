@@ -4,7 +4,7 @@ description: 소프트웨어 아키텍처 설계, 특히 CDA(Candidate Design Ar
 ---
 
 # Design Concepts
-`
+
 Design concepts는 아키텍처 구조를 생성하고 candidate design(후보)을 도출하기 위한 핵심 구성 요소(Building Blocks)이다.
 
 ## Design Concepts 요소

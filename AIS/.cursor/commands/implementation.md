@@ -1,7 +1,0 @@
-- C++ Code와 Google Test 기반 Unit Test Cases를 작성한다.
-- 소스코드와 테스트 코드는 디렉토리로 구분한다.
-- System Test Cases 및 Simulator를 구현하여 시스템 검증을 수행한다.
-- Web Browser 기반으로 System Test를 할 수 있는 Web 시뮬레이터를 작성한다.
-- 테스트에 대한 Line, Structural Coverage를 측정한다.
-- 결과물로 `docs/4_UT/Test_Report.md`, `docs/5_QA/QAS_Verification_Report.md`를 산출한다.
-- 최종적으로 `docs/5_QA/Traceability_Analysis_Report.md`를 산출하여 추적성을 증명한다.
